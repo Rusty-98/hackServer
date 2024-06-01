@@ -6,7 +6,7 @@ dotenv.config();
 const registerUser = async (req, res) => {
     try {
         // Destructure user data from request body
-        const { name, email, password, userType} = req.body;
+        const { name, email, password} = req.body;
 
         // Checking if none fields is empty
 
@@ -22,7 +22,7 @@ const registerUser = async (req, res) => {
         }
 
 
-        const userMake = await User.create({ name, email, password, userType});
+        const userMake = await User.create({ name, email, password});
         const createdUser = await User.findById(userMake._id).select("-password")
 
         if (!createdUser) {
@@ -58,7 +58,7 @@ const loginUser = async (req, res) => {
             return res.status(400).send('Invalid password');
         }
 
-        const tokken = jwt.sign({ email, userType: user.userType }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        const tokken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         res.status(200).json({
             status: 'ok',
